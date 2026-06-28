@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Torres Choi – High School Student. Aspiring Harvard applicant with a passion for science, leadership, and creative arts.">
+  <title>Torres Choi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #fff0f5;
+      --card-bg: #ffffff;
+      --text: #2e1a2c;
+      --text-heading: #1a0e18;
+      --text-secondary: #6d5a6b;
+      --accent: #d63384;
+      --accent-soft: rgba(214, 51, 132, 0.12);
+      --accent-glow: rgba(214, 51, 132, 0.2);
+      --border: #f0d4e4;
+      --nav-bg: rgba(255, 240, 245, 0.85);
+      --glow-color: rgba(214, 51, 132, 0.1);
+      --skill-tag-bg: rgba(214, 51, 132, 0.1);
+      --skill-tag-border: rgba(214, 51, 132, 0.25);
+      --lang-bar-bg: #f5d5e8;
+      --footer-color: #b297ab;
+      --input-bg: #fff0f5;
+      --wave-color1: rgba(214, 51, 132, 0.15);
+      --wave-color2: rgba(255, 107, 157, 0.1);
+    }
+
+    body.dark-mode {
+      --bg: #2d132c;
+      --card-bg: #3e1e3a;
+      --text: #f0d4e4;
+      --text-heading: #ffffff;
+      --text-secondary: #d4b0c8;
+      --accent: #ff6b9d;
+      --accent-soft: rgba(255, 107, 157, 0.15);
+      --accent-glow: rgba(255, 107, 157, 0.25);
+      --border: #5c2e50;
+      --nav-bg: rgba(45, 19, 44, 0.85);
+      --glow-color: rgba(255, 107, 157, 0.12);
+      --skill-tag-bg: rgba(255, 107, 157, 0.12);
+      --skill-tag-border: rgba(255, 107, 157, 0.3);
+      --lang-bar-bg: #4d2a43;
+      --footer-color: #ad8da1;
+      --input-bg: #4d2a43;
+      --wave-color1: rgba(255, 107, 157, 0.2);
+      --wave-color2: rgba(214, 51, 132, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    #introScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #introScreen.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .intro-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s ease forwards 0.2s;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .intro-loader {
+      margin-top: 40px;
+      width: 60px;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.5s;
+    }
+
+    .intro-loader-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 2px;
+      animation: loadBar 2s ease forwards 0.6s;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes loadBar {
+      0% {
+        width: 0%;
+      }
+
+      100% {
+        width: 100%;
+      }
+    }
+
+    #mainContent {
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    #mainContent.visible {
+      opacity: 1;
+    }
+
+    /* ========== LIGHTBOX ========== */
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      cursor: pointer;
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(214, 51, 132, 0.3);
+      cursor: default;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      z-index: 10001;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+      line-height: 1;
+    }
+
+    .lightbox-close:hover {
+      color: var(--accent);
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle 500px at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--glow-color), transparent 70%);
+      transition: background 0.1s ease;
+      will-change: background;
+    }
+
+    #waveCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--nav-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 999;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px 32px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      text-transform: uppercase;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--accent);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    section {
+      padding: 100px 24px 60px;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: 0.02em;
+    }
+
+    .section-title i {
+      font-size: 1.4rem;
+      opacity: 0.85;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      margin-bottom: 24px;
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .profile-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 30px var(--accent-glow);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .profile-img:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .profile-tagline {
+      color: var(--accent);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .skill-tag {
+      background: var(--skill-tag-bg);
+      border: 1px solid var(--skill-tag-border);
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .lang-item {
+      margin-bottom: 14px;
+    }
+
+    .lang-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: var(--text-heading);
+    }
+
+    .lang-bar {
+      height: 5px;
+      background: var(--lang-bar-bg);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .lang-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #ff85b3);
+      border-radius: 10px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-left: 6px;
+      border-left: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .timeline-item:hover {
+      border-left-color: var(--accent);
+    }
+
+    .timeline-date {
+      min-width: 130px;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .timeline-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-heading);
+    }
+
+    .company {
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .award-entry {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .award-photo-small {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      transition: 0.2s;
+      cursor: pointer;
+      font-size: 0.7rem;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    .award-photo-small i {
+      font-size: 1.2rem;
+    }
+
+    .award-photo-small:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+      transform: scale(1.05);
+    }
+
+    .award-photo-small img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .award-description {
+      flex: 1;
+      min-width: 200px;
+      color: var(--text);
+    }
+
+    .experience-entry {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      background: var(--accent-soft);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+
+    .experience-entry:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .experience-photo {
+      width: 160px;
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      border: 1px dashed var(--accent);
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      transition: 0.2s;
+      cursor: pointer;
+      font-size: 0.8rem;
+      flex-direction: column;
+      gap: 4px;
+      overflow: hidden;
+    }
+
+    .experience-photo i {
+      font-size: 1.8rem;
+    }
+
+    .experience-photo:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+      transform: scale(1.03);
+    }
+
+    .experience-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .experience-content {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .experience-content h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .experience-content p {
+      color: var(--text);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .add-experience-btn {
+      background: transparent;
+      border: 1.5px dashed var(--accent);
+      color: var(--accent);
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .add-experience-btn:hover {
+      background: var(--accent-soft);
+      border-style: solid;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .gallery-placeholder {
+      aspect-ratio: 4/3;
+      background: var(--card-bg);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: 0.2s;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .gallery-placeholder:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+      transform: scale(1.03);
+    }
+
+    .gallery-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: 0.2s;
+      margin-top: 18px;
+    }
+
+    .resume-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--footer-color);
+      padding: 30px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      nav {
+        gap: 12px 20px;
+        font-size: 0.75rem;
+      }
+
+      .theme-toggle {
+        right: 12px;
+      }
+
+      .award-entry {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .award-photo-small {
+        width: 80px;
+        height: 80px;
+      }
+
+      .experience-entry {
+        flex-direction: column;
+      }
+
+      .experience-photo {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="introScreen">
+    <h1 class="intro-title">Torres Choi</h1>
+    <div class="intro-loader">
+      <div class="intro-loader-bar"></div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <img src="" alt="Enlarged view" id="lightboxImg">
+  </div>
+
+  <div id="mainContent">
+    <canvas id="waveCanvas"></canvas>
+
+    <nav>
+      <a href="#about">About</a>
+      <a href="#skills">Skills &amp; Languages</a>
+      <a href="#education">Education</a>
+      <a href="#extracurricular">Extracurricular</a>
+      <a href="#awards">Awards</a>
+      <a href="#exchange">Exchange Experience</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#contact">Contact</a>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle light/dark pink mode">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- 📸 ABOUT SECTION - PROFILE PHOTO             -->
+    <!-- 🔗 PASTE YOUR IMAGE URL HERE ⬇️              -->
+    <!-- ============================================ -->
+    <section id="about">
+      <div class="card">
+        <div class="profile-header">
+          <img src="https://eclass.cdsj5.edu.mo/file/user_photo/V21wT01rMHpUWHBOZUUxNlNYcE9hazE0VFhwUmVrMTZUVFZOZWxFOVRucE5lazFVVFhsTmVsbDZUVlJOTUUxNlRYcFBWRTB3VGpKTk0wNVVQVE13.jpg" alt="Torres Choi" class="profile-img lightbox-trigger">
+          <div>
+            <h1 class="profile-name">Torres Choi</h1>
+            <p class="profile-tagline">High School Student · Aspiring Scientist &amp; Leader</p>
+            <p style="margin-top:12px; max-width:600px;">
+              I'm a student at St. Joseph Diocesan College (Fifth School) with a deep curiosity for physics and a love for photography. I lead on the handball court, recycle for my community, and constantly look for connections between science, art, and teamwork.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2 class="section-title"><i class="fa-solid fa-code"></i> Skills &amp; Languages</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3 style="color:var(--text-heading); margin-bottom:16px;">🧠 Skills & Interests</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Photography</span>
+            <span class="skill-tag">Singing</span>
+            <span class="skill-tag">Skating</span>
+            <span class="skill-tag">Cycling</span>
+            <span class="skill-tag">Motorsports</span>
+            <span class="skill-tag">Chess</span>
+            <span class="skill-tag">Microsoft Excel (MOS)</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--text-heading); margin-bottom:16px;">🌐 Languages</h3>
+          <div class="lang-item">
+            <div class="lang-header"><span>Cantonese</span><span style="color:var(--accent);">Native</span></div>
+            <div class="lang-bar">
+              <div class="lang-fill" style="width:100%"></div>
+            </div>
+          </div>
+          <div class="lang-item">
+            <div class="lang-header"><span>Mandarin</span><span style="color:var(--accent);">Fluent</span></div>
+            <div class="lang-bar">
+              <div class="lang-fill" style="width:88%"></div>
+            </div>
+          </div>
+          <div class="lang-item">
+            <div class="lang-header"><span>English</span><span style="color:var(--accent);">Intermediate</span></div>
+            <div class="lang-bar">
+              <div class="lang-fill" style="width:60%"></div>
+            </div>
+          </div>
+          <div class="lang-item">
+            <div class="lang-header"><span>German</span><span style="color:var(--accent);">Basic</span></div>
+            <div class="lang-bar">
+              <div class="lang-fill" style="width:25%"></div>
+            </div>
+          </div>
+          <div class="lang-item">
+            <div class="lang-header"><span>Italian</span><span style="color:var(--accent);">Basic</span></div>
+            <div class="lang-bar">
+              <div class="lang-fill" style="width:25%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="education">
+      <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Education</h2>
+      <div class="card">
+        <div class="timeline-item">
+          <div class="timeline-date">2021 – 2026</div>
+          <div class="timeline-content">
+            <h3>High School Diploma</h3>
+            <p class="company">St. Joseph Diocesan College (Fifth School) — Macau</p>
+            <p>Expected Graduation: <strong>July 2027</strong> · Relevant Coursework: Physics, Biology, Chemistry, Mathematics</p>
+            <p style="margin-top:6px;">Currently preparing for IGCSE examinations in Physics, Chemistry, and Mathematics (October 2025).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="extracurricular">
+      <h2 class="section-title"><i class="fa-solid fa-people-group"></i> Extracurricular Activities</h2>
+      <div class="card">
+        <div class="timeline-item">
+          <div class="timeline-date">Summer 2021 – 2025</div>
+          <div class="timeline-content">
+            <h3>Team Leader – Handball &amp; Basketball</h3>
+            <p class="company">School Sports Teams</p>
+            <p>Led an 18‑member handball team, organized practices, and mentored junior players. Won <strong>3rd place</strong> in the Academic Competition (2024–2025).</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Winter 2025 – Present</div>
+          <div class="timeline-content">
+            <h3>Logistics Lead – Campus Recycling</h3>
+            <p class="company">Volunteer Recycling Team</p>
+            <p>Manage plastic bottle collection across the entire school and coordinate heavy‑item transport, significantly reducing campus waste.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">October 2025</div>
+          <div class="timeline-content">
+            <h3>IGCSE Exam Preparation</h3>
+            <p class="company">Self‑Directed Study</p>
+            <p>Independent preparation for IGCSE Physics, Chemistry, and Mathematics to strengthen academic foundations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 📸 AWARDS SECTION - 3 AWARD PHOTOS          -->
+    <!-- 🔗 PASTE YOUR IMAGE URL HERE ⬇️              -->
+    <!-- ============================================ -->
+    <section id="awards">
+      <h2 class="section-title"><i class="fa-solid fa-trophy"></i> Awards &amp; Honors</h2>
+      <div class="card">
+        <!-- Award 1: Handball -->
+        <div class="award-entry">
+          <div class="award-photo-small lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://cdn.phototourl.com/free/2026-06-28-564094bb-f963-4ea6-8fa2-34d4127e2d56.jpg" alt="Award photo">
+          </div>
+          <div class="award-description">🏅 3rd Place – Academic Competition (Handball), 2024–2025</div>
+        </div>
+        <!-- Award 2: GAPSK -->
+        <div class="award-entry">
+          <div class="award-photo-small lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://cdn.phototourl.com/free/2026-06-28-0ea51bb0-1f8b-4d84-8e08-5e83ade86ba0.jpg">
+          </div>
+          <div class="award-description">📙 GAPSK Chinese Proficiency Leveling – June 2024</div>
+        </div>
+        <!-- Award 3: MOS Excel -->
+        <div class="award-entry">
+          <div class="award-photo-small lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://cdn.phototourl.com/free/2026-06-28-53be675f-bc5f-4162-b017-b7f2283deb42.png" alt="Award photo">
+          </div>
+          <div class="award-description">📊 Microsoft Office Specialist (MOS) Associate – Excel, January 2026</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 📸 EXCHANGE EXPERIENCE SECTION - 1 PHOTO     -->
+    <!-- 🔗 PASTE YOUR IMAGE URL HERE ⬇️              -->
+    <!-- ============================================ -->
+    <section id="exchange">
+      <h2 class="section-title"><i class="fa-solid fa-earth-americas"></i> Exchange Experience</h2>
+      <div class="card">
+        <div class="experience-entry">
+          <div class="experience-photo lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://cdn.phototourl.com/free/2026-06-28-ec2edf0a-a6b1-435d-bf03-71a1399c055f.jpg">
+          </div>
+          <div class="experience-content">
+            <h3>visiting nursing home</h3>
+            <p>response as camera team's leader and taking photo of the event and guided to the photo angle for teammate</p>
+          </div>
+        </div>
+        <button class="add-experience-btn"><i class="fa-solid fa-plus"></i> Add Another Experience</button>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 📸 PORTFOLIO SECTION - 4 PHOTOS             -->
+    <!-- 🔗 PASTE YOUR IMAGE URL HERE ⬇️              -->
+    <!-- ============================================ -->
+    <section id="portfolio">
+      <h2 class="section-title"><i class="fa-solid fa-images"></i> Creative Portfolio</h2>
+      <div class="card">
+
+        <div class="gallery-grid">
+          <div class="gallery-placeholder lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://img.sanishtech.com/u/904bb6855fcb3f926750fc1d24893d64.jpg">
+          </div>
+          <div class="gallery-placeholder lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://img.sanishtech.com/u/f89852283d5dc494f6ecc0c8ba218dcf.jpg">
+          </div>
+          <div class="gallery-placeholder lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://img.sanishtech.com/u/ebe628250b10830b892542349b9db008.jpg" alt="Portfolio photo 3">
+          </div>
+          <div class="gallery-placeholder lightbox-trigger">
+            <!-- 🔗 PASTE YOUR IMAGE URL BELOW (replace the src) -->
+            <img src="https://img.sanishtech.com/u/77dd0c86212dcac8e44ea4998e7d43ce.jpg" alt="Portfolio photo 4">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title"><i class="fa-solid fa-paper-plane"></i> Contact &amp; Resume</h2>
+      <div class="card" style="text-align: center;">
+        <p style="font-size: 1rem; margin-bottom: 6px;">
+          <i class="fa-solid fa-envelope" style="color:var(--accent);"></i>
+          <a href="mailto:tickfire.mc.edu.mo@gmail.com" style="color: var(--text); text-decoration: none;">tickfire.mc.edu.mo@gmail.com</a>
+        </p>
+        <p style="font-size: 1rem; margin-bottom: 6px;">
+          <i class="fa-solid fa-phone" style="color:var(--accent);"></i>
+          <a href="tel:+85368255953" style="color: var(--text); text-decoration: none;">+(853) 6825 5953</a>
+        </p>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px;">📍 No. 228 Lian'an Road, Zhuhai</p>
+        <a href="#" class="resume-btn"><i class="fa-solid fa-download"></i> Download Full Resume (PDF)</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 Torres Choi · Crafted for IT exam project</p>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const introScreen = document.getElementById('introScreen');
+      const mainContent = document.getElementById('mainContent');
+      setTimeout(() => {
+        introScreen.classList.add('fade-out');
+        mainContent.classList.add('visible');
+      }, 3000);
+      introScreen.addEventListener('click', () => {
+        introScreen.classList.add('fade-out');
+        mainContent.classList.add('visible');
+      });
+      // ========== LIGHTBOX ==========
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxClose = document.getElementById('lightboxClose');
+
+      function openLightbox(imgSrc) {
+        if (!imgSrc) return;
+        lightboxImg.src = imgSrc;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+          lightboxImg.src = '';
+        }, 300);
+      }
+      lightboxClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeLightbox();
+      });
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        }
+      });
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.lightbox-trigger');
+        if (!trigger) return;
+        if (trigger.tagName === 'IMG') {
+          openLightbox(trigger.src);
+          return;
+        }
+        const img = trigger.querySelector('img');
+        if (img && img.src) {
+          openLightbox(img.src);
+        }
+      });
+      // ========== MOUSE GLOW ==========
+      const body = document.body;
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let currentX = mouseX;
+      let currentY = mouseY;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      function updateGlow() {
+        currentX += (mouseX - currentX) * 0.08;
+        currentY += (mouseY - currentY) * 0.08;
+        body.style.setProperty('--mouse-x', currentX + 'px');
+        body.style.setProperty('--mouse-y', currentY + 'px');
+        requestAnimationFrame(updateGlow);
+      }
+      updateGlow();
+      // ========== WAVES ==========
+      const canvas = document.getElementById('waveCanvas');
+      const ctx = canvas.getContext('2d');
+      let width, height, time = 0;
+
+      function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      function drawWaves() {
+        ctx.clearRect(0, 0, width, height);
+        const cs = getComputedStyle(document.body);
+        const c1 = cs.getPropertyValue('--wave-color1').trim() || 'rgba(214,51,132,0.15)';
+        const c2 = cs.getPropertyValue('--wave-color2').trim() || 'rgba(255,107,157,0.1)';
+        time += 0.008;
+        ctx.beginPath();
+        ctx.moveTo(0, height * 0.5);
+        for (let x = 0; x <= width; x += 10) {
+          const y = height * 0.5 + Math.sin(x * 0.008 + time) * 30 + Math.cos(x * 0.004 + time * 0.7) * 20;
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(width, height);
+        ctx.lineTo(0, height);
+        ctx.closePath();
+        ctx.fillStyle = c1;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(0, height * 0.65);
+        for (let x = 0; x <= width; x += 10) {
+          const y = height * 0.65 + Math.sin(x * 0.006 + time * 1.3) * 25 + Math.cos(x * 0.005 + time * 0.9) * 15;
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(width, height);
+        ctx.lineTo(0, height);
+        ctx.closePath();
+        ctx.fillStyle = c2;
+        ctx.fill();
+        requestAnimationFrame(drawWaves);
+      }
+      drawWaves();
+      // ========== THEME TOGGLE ==========
+      const themeToggle = document.getElementById('themeToggle');
+      const icon = themeToggle.querySelector('i');
+
+      function setTheme(mode) {
+        if (mode === 'dark') {
+          body.classList.add('dark-mode');
+          icon.classList.remove('fa-moon');
+          icon.classList.add('fa-sun');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          body.classList.remove('dark-mode');
+          icon.classList.remove('fa-sun');
+          icon.classList.add('fa-moon');
+          localStorage.setItem('theme', 'light');
+        }
+      }
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      setTheme(savedTheme);
+      themeToggle.addEventListener('click', () => {
+        if (body.classList.contains('dark-mode')) setTheme('light');
+        else setTheme('dark');
+      });
+      // ========== ACTIVE NAV LINK ==========
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('nav a');
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop - 140;
+          if (pageYOffset >= sectionTop) current = section.getAttribute('id');
+        });
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>
